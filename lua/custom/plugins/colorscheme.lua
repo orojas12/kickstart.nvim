@@ -1,10 +1,12 @@
 local vscode = {
   'Mofiqul/vscode.nvim',
-  init = function()
-    local c = require('vscode.colors').get_colors()
-    require('vscode').setup()
-    vim.cmd.colorscheme 'vscode'
-  end,
+  opts = {},
+}
+
+local rosepine = {
+  'rose-pine/neovim',
+  name = 'rose-pine',
+  opts = {},
 }
 
 local tokyonight = { -- You can easily change to a different colorscheme.
@@ -13,15 +15,31 @@ local tokyonight = { -- You can easily change to a different colorscheme.
   --
   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
   'folke/tokyonight.nvim',
-  init = function()
-    -- Load the colorscheme here.
-    -- Like many other themes, this one has different styles, and you could load
-    -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-    vim.cmd.colorscheme 'tokyonight-night'
+  opts = {},
+}
 
-    -- You can configure highlights by doing something like:
-    vim.cmd.hi 'Comment gui=none'
+local nightfox = {
+  'EdenEast/nightfox.nvim',
+  opts = {},
+}
+
+local kanagawa = {
+  'rebelot/kanagawa.nvim',
+  opts = {},
+}
+
+local gruvbox_material = {
+  'sainnhe/gruvbox-material',
+  config = function()
+    vim.g.gruvbox_material_enable_italic = true
   end,
 }
 
-return { vscode }
+local catppuccin = {
+  'catppuccin/nvim',
+  config = function()
+    require('catppuccin').setup {}
+  end,
+}
+
+return { rosepine, vscode, tokyonight, nightfox, kanagawa, gruvbox_material, catppuccin }
