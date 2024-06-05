@@ -182,13 +182,14 @@ vim.keymap.set('v', 'jh', '<Esc>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Netrw (:Explore)
-vim.keymap.set('n', '<leader>e', ':Explore<CR>', { desc = 'Toggle directory explorer' })
+-- Save buffer
+vim.keymap.set('n', ';w', ':w<CR>', { desc = 'Save buffer' })
 
--- Save
-vim.keymap.set('n', ';w', ':w<CR>', { desc = 'Save document' })
+-- Delete buffer
+vim.keymap.set('n', ';d', ':bd<CR>', { desc = 'Delete buffer' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -249,7 +250,6 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -647,8 +647,6 @@ require('lazy').setup({
         css_variables = {},
 
         cssmodules_ls = {},
-
-        jdtls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -679,6 +677,7 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+          ['jdtls'] = function() end,
         },
       }
     end,
@@ -856,13 +855,6 @@ require('lazy').setup({
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
 
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
-
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
@@ -913,7 +905,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -944,7 +936,17 @@ require('lazy').setup({
   },
 })
 
+local function toggleDarkMode()
+  if vim.opt.background:get() == 'light' then
+    vim.opt.background = 'dark'
+  else
+    vim.opt.background = 'light'
+  end
+end
+
 vim.cmd.colorscheme 'gruvbox-material'
+
+vim.keymap.set('n', '<leader>l', toggleDarkMode, { desc = 'Toggle dark mode' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
