@@ -98,6 +98,9 @@ vim.g.have_nerd_font = true
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+-- Enable true colors
+vim.opt.termguicolors = true
+
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -647,6 +650,10 @@ require('lazy').setup({
         css_variables = {},
 
         cssmodules_ls = {},
+
+        jsonls = {},
+
+        jdtls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -664,6 +671,8 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'php-cs-fixer',
         'prettier',
+        'java-debug-adapter',
+        'java-test',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -936,7 +945,7 @@ require('lazy').setup({
   },
 })
 
-local function toggleDarkMode()
+local function toggleLightOrDark()
   if vim.opt.background:get() == 'light' then
     vim.opt.background = 'dark'
   else
@@ -944,9 +953,21 @@ local function toggleDarkMode()
   end
 end
 
-vim.cmd.colorscheme 'gruvbox-material'
+local function setLightOrDark()
+  local current = os.date '*t'
+  local sunset_hour = 19
+  if current.hour < sunset_hour then
+    vim.opt.background = 'light'
+  else
+    vim.opt.background = 'dark'
+  end
+end
 
-vim.keymap.set('n', '<leader>l', toggleDarkMode, { desc = 'Toggle dark mode' })
+-- setLightOrDark()
+
+vim.cmd.colorscheme 'catppuccin'
+
+vim.keymap.set('n', '<leader>l', toggleLightOrDark, { desc = 'Toggle dark mode' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
